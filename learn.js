@@ -4,6 +4,7 @@ const postData =
 {User: 'Kaelyn2',
 
 };
+console.log("this is change Kaelyn Made");
 async function loadData(){
     const response = await fetch('http://127.0.0.1:5000/load', {
         method: 'POST',
@@ -97,6 +98,7 @@ function sub1function(element){
     let type = element.target.closest('tr').querySelector(".type1").value;
     //get the data within the rows 
     let date = element.target.closest('tr').querySelector(".date1").value;
+    let amount = element.target.closest('tr').querySelector(".amount1").value;
     let index = element.target.closest('tr').querySelector(".hidden-column").textContent;
     let tableName = element.target.closest('table').querySelector("thead tr th.table-title").textContent;
 
@@ -277,6 +279,7 @@ function createTable(tableName) {
         <td class="hidden-column">${sameIndex}</td>
         <td><input type="text" value="" placeholder="Type" class="type1" ></td>
         <td><input type="date" value="" placeholder="Date" class="date1"></td>
+        <td><input type="number" value="" onchange="calculateTotal(this, '${tableName}')" placeholder="Amount" class="amount1"></td>
         <td class="actions"> 
             <button class="sub1" onclick="submitRow(this)">Submit</button>
             <button class ="edit" onclick="editRow(this)" style="display:none;">Edit</button>
@@ -299,6 +302,11 @@ function createTable(tableName) {
 }
 
 
+
+function calculateTotal(input, tableName) {
+    const tbody = input.closest('tbody');
+    const rows = tbody.querySelectorAll('tr');
+    let cumulativeTotal = 0;
 
  
 
