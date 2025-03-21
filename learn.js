@@ -237,7 +237,6 @@ function addRowFunction(button) {
         <td><input type="text" value="" placeholder="Type" required class="type1"></td>
         <td><input type="date" value="" placeholder="Date" class="date1"></td>
         <td><input type="number" value="" placeholder="Amount" required class="amount1"></td>
-        <td class="total-amount">0.00</td>
         <td class="actions"> 
             <button class="sub1"onclick="submitRow(this)">Submit</button>
             <button class="edit"onclick="editRow(this)" style="display:none;">Edit</button>
@@ -269,8 +268,7 @@ function createTable(tableName) {
         <th class="hidden-column">#</th>
         <th>Type</th>
         <th>Date</th>
-        <th>Amount</th>
-        <th>Total Amount</th> 
+        <th>Amount</th> 
         <th></th>
     `;
     thead.appendChild(headerRow);
@@ -283,7 +281,6 @@ function createTable(tableName) {
         <td><input type="text" value="" placeholder="Type" class="type1" ></td>
         <td><input type="date" value="" placeholder="Date" class="date1"></td>
         <td><input type="number" value="" onchange="calculateTotal(this, '${tableName}')" placeholder="Amount" class="amount1"></td>
-        <td class="total-amount">0.00</td> 
         <td class="actions"> 
             <button class="sub1" onclick="submitRow(this)">Submit</button>
             <button class ="edit" onclick="editRow(this)" style="display:none;">Edit</button>
@@ -312,16 +309,7 @@ function calculateTotal(input, tableName) {
     const rows = tbody.querySelectorAll('tr');
     let cumulativeTotal = 0;
 
-    // Calculate the cumulative total for each row in the table
-    rows.forEach((row) => {
-        const amountInput = row.querySelector('input[type="number"]');
-        if (amountInput) {
-            const value = parseFloat(amountInput.value) || 0;
-            cumulativeTotal += value;
-            const totalCell = row.querySelector('.total-amount');
-            totalCell.textContent = cumulativeTotal.toFixed(2); // Update total for this row
-        }
-    });
+ 
 
     // Update the global totals based on the table
     if (tableName === 'Income') {
