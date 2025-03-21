@@ -4,7 +4,6 @@ const postData =
 {User: 'Kaelyn2',
 
 };
-console.log("This is the change mae");
 async function loadData(){
     const response = await fetch('http://127.0.0.1:5000/load', {
         method: 'POST',
