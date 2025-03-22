@@ -31,18 +31,13 @@ async function loadData(){
 
 loadData()
 .then(() => {
+    createTable("Income");
     console.log("tables is starting");
     for(let num in data){
-        console.log(num);
-        console.log(data[num]);
+        
         let check = false; 
         let tables = document.querySelectorAll(".table")
         for(let table of tables){ //of returns the values and not indexes
-            console.log("tables");
-            console.log(table);
-            console.log("These are the tables" + table.querySelector(".table-title").textContent);
-            console.log("This is checked" + data[num][2]);
-            console.log(table.querySelector(".table-title").textContent == data[num][2]);
             if(table.querySelector(".table-title").textContent == data[num][2]){
                 check = true; 
                 let date = new Date(data[num][4]);
@@ -64,9 +59,7 @@ loadData()
                 break;
             }
         };
-        console.log("Status" + !check);
         if(!check){
-            console.log("creating new table :)");
             createTable(data[num][2])
             let date = new Date(data[num][4]);
             let formattedDate = date.toISOString().split('T')[0];
@@ -94,7 +87,17 @@ loadData()
 
 
 
-
+function getTotalExpense(){
+    console.log("Function is starting");
+    let tables = document.querySelectorAll(".table")
+    console.log(tables);
+    let totalExpense = 0;
+    for(let table of tables){
+        console.log(table.querySelector(".amount1").textContent);
+    }
+}
+console.log("Get total expense function");
+getTotalExpense();
 
 function sub1function(element){
     console.log("sub1 is clicked");
