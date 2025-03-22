@@ -358,8 +358,7 @@ nav li:nth-child(6):hover ~.active {
     color: var(--searchicon);  
 } 
 .hidden-column {
-    display: inline;
-    color: black;
+    display: none;
 } 
 .actions button {
     padding: 10px 20px;    

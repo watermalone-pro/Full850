@@ -50,13 +50,13 @@ loadData()
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
                     <td class="hidden-column">${data[num][6]}</td>
-                    <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1"></td>
-                    <td><input type="date" value=${formattedDate} placeholder="Date" class="date1"></td>
-                    <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1"></td>
+                    <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1" disabled></td>
+                    <td><input type="date" value=${formattedDate} placeholder="Date" class="date1" disabled></td>
+                    <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1" disabled></td>
                     <td class="actions"> 
-                        <button class="sub1"onclick="submitRow(this)">Submit</button>
-                        <button class="edit"onclick="editRow(this)" style="display:none;">Edit</button>
-                        <button class = "delete" style="display:none;">Delete</button>
+                        <button class="sub2" style = "display:none;" onclick="submitRow(this)">Submit</button>
+                        <button class="edit"onclick="editRow(this)" style="display:inline;">Edit</button>
+                        <button class = "delete" style="display:inline;">Delete</button>
                     </td>
                 `;
             
@@ -75,13 +75,13 @@ loadData()
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td class="hidden-column">${data[num][6]}</td>
-                <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1"></td>
-                <td><input type="date" value=${formattedDate} placeholder="Date" class="date1"></td>
-                <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1"></td>
+                <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1" disabled></td>
+                <td><input type="date" value=${formattedDate} placeholder="Date" class="date1" disabled></td>
+                <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1" disabled></td>
                 <td class="actions"> 
-                    <button class="sub1"onclick="submitRow(this)">Submit</button>
-                    <button class="edit"onclick="editRow(this)" style="display:none;">Edit</button>
-                    <button class = "delete" style="display:none;">Delete</button>
+                    <button class="sub1" style="display:none;" onclick="submitRow(this)">Submit</button>
+                    <button class="edit"onclick="editRow(this)" style="display:inline;">Edit</button>
+                    <button class = "delete" style="display:inline;">Delete</button>
                 </td>
             `;
             
@@ -97,7 +97,6 @@ loadData()
 
 
 function sub1function(element){
-    sameIndex += 1;
     console.log("sub1 is clicked");
     console.log("this works");
     console.log(element);
@@ -234,6 +233,8 @@ totalIncome = 0;
 totalExpense = 0;
 
 function addRowFunction(button) {
+    sameIndex += 1;
+
     const tbody = button.closest('tbody');
     const rowCount = tbody.rows.length - 1; // Exclude the "Add Row" button row
 
@@ -254,6 +255,8 @@ function addRowFunction(button) {
 }
 
 function createTable(tableName) {
+    sameIndex += 1;
+
     const name = tableName || document.getElementById('tableName').value || 'Untitled Table';
 
     // Create a new table element
