@@ -75,10 +75,10 @@ input {
 }  
 
 tr:nth-child(even) input { 
-    background-color: var(--tablebackground); 
+    background-color: var(--tablebackground2); 
 }  
 tr:nth-child(odd) input {  
-    background-color: var(--tablebackground2); 
+    background-color: var(--tablebackground1); 
 }  
 
 table{  

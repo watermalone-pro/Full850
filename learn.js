@@ -4,7 +4,6 @@ const postData =
 {User: 'Kaelyn2',
 
 };
-console.log("this is change Kaelyn Made");
 async function loadData(){
     const response = await fetch('http://127.0.0.1:5000/load', {
         method: 'POST',
@@ -32,10 +31,42 @@ async function loadData(){
 
 loadData()
 .then(() => {
+    console.log("tables is starting");
     for(let num in data){
         console.log(num);
-        console.log(data[num][2]);
-        if((num == 0) || (data[num][2] != data[num-1][2])){
+        console.log(data[num]);
+        let check = false; 
+        let tables = document.querySelectorAll(".table")
+        for(let table of tables){ //of returns the values and not indexes
+            console.log("tables");
+            console.log(table);
+            console.log("These are the tables" + table.querySelector(".table-title").textContent);
+            console.log("This is checked" + data[num][2]);
+            console.log(table.querySelector(".table-title").textContent == data[num][2]);
+            if(table.querySelector(".table-title").textContent == data[num][2]){
+                check = true; 
+                let date = new Date(data[num][4]);
+                let formattedDate = date.toISOString().split('T')[0];
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td class="hidden-column">${data[num][6]}</td>
+                    <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1"></td>
+                    <td><input type="date" value=${formattedDate} placeholder="Date" class="date1"></td>
+                    <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1"></td>
+                    <td class="actions"> 
+                        <button class="sub1"onclick="submitRow(this)">Submit</button>
+                        <button class="edit"onclick="editRow(this)" style="display:none;">Edit</button>
+                        <button class = "delete" style="display:none;">Delete</button>
+                    </td>
+                `;
+            
+                table.insertBefore(newRow, table.lastElementChild); // Insert before the button row
+                break;
+            }
+        };
+        console.log("Status" + !check);
+        if(!check){
+            console.log("creating new table :)");
             createTable(data[num][2])
             let date = new Date(data[num][4]);
             let formattedDate = date.toISOString().split('T')[0];
@@ -43,7 +74,7 @@ loadData()
             tbody = tbody[tbody.length-1];
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
-                <td class="hidden-column">${sameIndex}</td>
+                <td class="hidden-column">${data[num][6]}</td>
                 <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1"></td>
                 <td><input type="date" value=${formattedDate} placeholder="Date" class="date1"></td>
                 <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1"></td>
@@ -55,32 +86,8 @@ loadData()
             `;
             
             tbody.insertBefore(newRow, tbody.lastElementChild); // Insert before the button row
-        }else{
-            
-            let tbody = document.querySelectorAll(".table");
-            tbody = tbody[tbody.length-1];
-            let date = new Date(data[num][4]);
-            let formattedDate = date.toISOString().split('T')[0];
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td class="hidden-column">${sameIndex}</td>
-                <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1"></td>
-                <td><input type="date" value=${formattedDate} placeholder="Date" class="date1"></td>
-                <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1"></td>
-                <td class="actions"> 
-                    <button class="sub1"onclick="submitRow(this)">Submit</button>
-                    <button class="edit"onclick="editRow(this)" style="display:none;">Edit</button>
-                    <button class = "delete" style="display:none;">Delete</button>
-                </td>
-            `;
-            
-            tbody.insertBefore(newRow, tbody.lastElementChild); // Insert before the button row
-        
         }
     }
-    console.log("This is the data");
-    console.log(data[0][3]);
-    createTable("Income");
     
     
 });
@@ -247,7 +254,6 @@ function addRowFunction(button) {
 }
 
 function createTable(tableName) {
-    console.log("This is the index in new table");
     const name = tableName || document.getElementById('tableName').value || 'Untitled Table';
 
     // Create a new table element
