@@ -26,8 +26,11 @@ async function loadData(){
     console.log('Index'+sameIndex);
     console.log(typeof(sameIndex));
 
-};
-
+}; 
+const budgetParagraph = document.createElement('p');
+budgetParagraph.classList.add('totalBudgetAmount');
+budgetParagraph.innerText = 'The remaining budget is 44444444444444444444444444444444444';
+document.body.insertAdjacentElement('afterbegin', budgetParagraph);
 
 loadData()
 .then(() => {

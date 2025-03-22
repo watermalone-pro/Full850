@@ -342,7 +342,7 @@ nav li:nth-child(6):hover ~.active {
     border-radius: 28px; 
     background: var(--searchbackground);    
     margin-right: 20px;
-    margin-top: 45px;
+    margin-top: 20px;
     margin-left: 210px;
     
 }  
@@ -368,4 +368,11 @@ nav li:nth-child(6):hover ~.active {
 } 
 .actions button:hover {
     background-color: #ddd;
-} 
+}  
+.totalBudgetAmount{ 
+    margin-left: 210px; 
+    margin-top: 20px; 
+    margin-bottom: 20px; 
+    font-weight: bold; 
+    font-size: 25px; 
+}
