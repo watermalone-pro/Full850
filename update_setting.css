@@ -1,0 +1,281 @@
+.raleway {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+  
+  }  
+  *{ 
+      margin: 0; 
+      padding: 0; 
+      font-family: "Raleway", sans-serif;  
+  }  
+  
+  :root{  
+      --background: white; 
+      --lightmain1: #134B70; 
+      --lightmain2: #201E43; 
+      --textcolor: white;  
+      --tablebackground: #f3f3f3;  
+      --tablebackground2: white; 
+      --cornflower-blue: #788CFCff; 
+      --searchbackground: #f6f6f6;  
+      --searchtext: #333;  
+      --searchicon: black; 
+     
+      --dark-background: #222225ff; 
+      --darkmain1: rgb(16, 17, 21); 
+      --darkmain2: rgb(7, 7, 9); 
+      --dark-textcolor: white; 
+      --darktablebackground: #1C2029ff;   
+      --darktablebackground2: rgb(40, 45, 59); 
+      --darksearchbackground: rgb(89, 81, 92); 
+      --darksearchtext: #f3f3f3;  
+      --darksearchicon: white;   
+      --darkcornflower-blue: #AA0D51ff;
+  
+  }  
+  body{ 
+      background-color: var(--background); 
+  }
+  body.theme-dark{   
+      --background: var(--dark-background); 
+      --lightmain1: var(--darkmain1); 
+      --lightmain2: var(--darkmain2); 
+      --textcolor: var(--dark-textcolor);  
+      --tablebackground: var(--darktablebackground);  
+      --tablebackground2: var(--darktablebackground2); ; 
+      --searchbackground: var(--darksearchbackground);  
+      --searchtext: var(--darksearchtext);  
+      --searchicon: var(--darksearchicon);   
+      --cornflower-blue: var(--darkcornflower-blue); 
+  } 
+  @media (prefers-color-scheme: dark) {
+      body.theme-auto {  
+      --background: var(--dark-background); 
+      --lightmain1: var(--darkmain1); 
+      --lightmain2: var(--darkmain2); 
+      --textcolor: var(--dark-textcolor);  
+      --tablebackground: var(--darktablebackground);   
+      --tablebackground2: var(--darktablebackground2); ; 
+      --searchbackground: var(--darksearchbackground); 
+      --searchtext: var(--darksearchtext);  
+      --searchicon: var(--darksearchicon);  
+      --cornflower-blue: var(--darkcornflower-blue); 
+      } 
+  }
+.container{    
+    background-color: var(--lightmain1); 
+    width: 130px; 
+    height: 100vh; 
+    float: left;    
+    position: fixed;   
+    top: 0; 
+    left: 0;  
+    padding: 20px 30px; 
+} 
+.logo{ 
+    display: block;  
+    margin-bottom: 20px;   
+    margin-left: -30px;  
+    margin-top: -20px; 
+
+} 
+.logo-img{ 
+    width: 190px;   
+}
+nav{ 
+    float: right;   
+} 
+nav ul{ 
+    position: relative; 
+    list-style: none;    
+} 
+nav li { 
+    padding: 10px 0px; 
+
+} 
+nav a{ 
+    color: var(--textcolor);  
+    text-decoration: none; 
+    text-transform: uppercase; 
+    padding: 10px 14px;  
+    display: flex; 
+    align-items: center;
+} 
+nav li:hover ~ .active{  
+    display: block; 
+} 
+
+
+nav li:nth-child(1):hover ~.active { 
+    top: 2.6%; 
+} 
+nav li:nth-child(2):hover ~.active { 
+    top: 22.6%; 
+} 
+nav li:nth-child(3):hover ~.active { 
+    top: 42.6%; 
+}  
+nav li:nth-child(4):hover ~.active { 
+    top: 62.6%; 
+}   
+nav li:nth-child(5):hover ~.active { 
+    top: 82.6%; 
+}   
+.icon{ 
+    color: var(--textcolor);    
+    font-size: 22px;
+    margin-right: 20px;
+}  
+nav li:hover a, 
+nav li:hover .icon{ 
+    color: black;  
+    transition: 0.3s;
+}    
+.active{ 
+    background: white; 
+    width: 100%; 
+    height: 47px;  
+    position: absolute; 
+    right: 0; 
+    top: 2.6%;  
+    z-index: -1;  
+    border-radius: 6px;  
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.4); 
+    display: none; 
+    transition: top 0.4s;
+}   
+
+.header{ 
+    display: flex;
+    align-items: center; 
+    padding-left: 210px;  
+    background-color: var(--lightmain2);
+}
+.header-text{  
+    font-weight: bold;  
+    font-size: 22px;
+    padding-top: 15px;  
+    padding-bottom: 15px; 
+     
+    color: var(--textcolor); 
+} 
+
+.name{ 
+    margin-left: 30px;  
+    margin-top: 2px; 
+    font-weight: bold; 
+    font-size: 22px; 
+}  
+.button{ 
+    padding: 12px 25px; 
+    font-weight: bold; 
+    font-size: 16px;  
+    color: black; 
+    border: none; 
+    border-radius: 4px; 
+    outline: none; 
+    cursor: pointer; 
+    background: var(--background);   
+    text-decoration: none; 
+    margin-right: 30px;    
+    margin-left: 100px;
+}   
+
+
+
+form{
+    width: 40vw;
+    max-width: 800px;
+    min-width: 300px;
+    margin: 0 auto;
+    padding-left: 210px;  
+    padding-top: 1rem; 
+    
+} 
+fieldset{
+    border: none;
+    padding: 10px 0;
+    border-bottom: 3px solid #3b3b4f;   
+}  
+input{ 
+    display: block; 
+    width: 100%; 
+    padding: 13.5px; 
+    box-sizing: border-box; 
+    border-radius: 4px; 
+    border: 1px solid #dddddd;  
+    outline: none; 
+    background: #eeeeee; 
+    transition: background 0.2s, border-color 0.2s;  
+    margin-top: 5px; 
+} 
+label {
+    display: block;
+    margin: 0.5rem 0; 
+    color: var(--textcolor);  
+    padding-top: 20px; 
+    color: black;
+} 
+.select__input{ 
+    margin-left: auto;  
+    margin-right: 40px; 
+}  
+h2{ 
+    margin-left: 210px; 
+} 
+.update_button{ 
+    width: 100%; 
+    padding: 9px 20px; 
+    font-weight: bold; 
+    font-size: 1.1rem;  
+    color: var(--textcolor); 
+    border: none; 
+    border-radius: 4px; 
+    outline: none; 
+    cursor: pointer; 
+    background: var(--lightmain1);   
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    margin-top: 40px;  
+    text-decoration: none;
+}    
+.logout_container{
+    width: 40vw;
+    max-width: 800px;
+    min-width: 300px;
+    margin: 0 auto;
+    padding-bottom: 2em;  
+    padding-left: 210px;  
+    padding-top: 2rem;  
+    text-decoration: none;
+    
+} 
+.logout_button{ 
+    width: 100%; 
+    padding: 9px 20px;  
+    font-weight: bold; 
+    font-size: 1.1rem;  
+    color: var(--textcolor); 
+    border: none; 
+    border-radius: 4px; 
+    outline: none; 
+    cursor: pointer; 
+    background: var(--lightmain1);   
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    margin-top: 20px;  
+    text-decoration: none;
+}   
+a{ 
+    text-decoration: none;
+} 
+.updateText{ 
+    color: var(--searchicon); 
+} 
+
+
+

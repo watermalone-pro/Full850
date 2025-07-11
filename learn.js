@@ -1,10 +1,34 @@
-console.log('Kaelyn change hello');
 let sameIndex = 0;
 let data = {}; 
+var username = document.getElementById("username").getAttribute('data-username');
+console.log("This is the logged in user" + username);
+document.addEventListener("DOMContentLoaded", function() {
+    const filter = document.querySelector(".search-input");
+    filter.addEventListener("input", function() {
+        let tables = document.querySelectorAll(".table");
+        let value = filter.value.toUpperCase().trim();
+        for(table of tables){
+            rows = table.querySelectorAll("tr");
+            for(let i = 2; i<rows.length-1; i++){
+                let type = rows[i].querySelector('.type1')?.value || "";
+                let date = rows[i].querySelector('.date1')?.value || "";
+                let amount = rows[i].querySelector('.amount1')?.value || "";
+                if((type.toUpperCase().indexOf(value) > -1) || (date.toUpperCase().indexOf(value) > -1) ||
+                (amount.toUpperCase().indexOf(value) > -1)){
+                    rows[i].style.display = '';
+                }else{
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+        
+    });
+});
 const postData = 
-{User: 'Kaelyn2',
+{User: username,
 
 };
+console.log(postData);
 async function loadData(){
     const response = await fetch('http://127.0.0.1:5000/load', {
         method: 'POST',
@@ -14,6 +38,7 @@ async function loadData(){
         body: JSON.stringify({postData})
     });
     data = await response.json();
+    console.log(data);
     for(let num in data){
         console.log(data[num]);
     }
@@ -24,32 +49,35 @@ async function loadData(){
         sameIndex = Number(data[0][7]);
 
     }
-    console.log('Index'+sameIndex);
-    console.log(typeof(sameIndex));
+    
 
 }; 
 const budgetParagraph = document.createElement('p');
 budgetParagraph.classList.add('totalBudgetAmount');
-budgetParagraph.innerText = 'The remaining budget is 44444444444444444444444444444444444';
+budgetParagraph.innerText = 'The remaining budget is';
 document.body.insertAdjacentElement('afterbegin', budgetParagraph);
 
 loadData()
 .then(() => {
+    //Creating income table to ensure there will always be one
     createTable("Income");
-    console.log("tables is starting");
-    for(let num in data){
+    let tables = document.querySelectorAll(".table"); //Getting all tables initiated
+
+    for(let num in data){ //Goes through all data from user
         
         let check = false; 
-        let tables = document.querySelectorAll(".table")
+        tables = document.querySelectorAll(".table"); 
+
         for(let table of tables){ //of returns the values and not indexes
-            if(table.querySelector(".table-title").textContent == data[num][2]){
+            if((table.querySelector(".table-title").childNodes[0].textContent == data[num][2]) && (data[num][2] != "Income")){
+                console.log("This is the type" + data[num][3]);
                 check = true; 
                 let date = new Date(data[num][4]);
                 let formattedDate = date.toISOString().split('T')[0];
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
                     <td class="hidden-column">${data[num][6]}</td>
-                    <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1" disabled></td>
+                    <td><input type="text" value="${data[num][3]}" placeholder="Type" required class="type1" disabled></td>
                     <td><input type="date" value=${formattedDate} placeholder="Date" class="date1" disabled></td>
                     <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1" disabled></td>
                     <td class="actions"> 
@@ -62,17 +90,43 @@ loadData()
                 table.insertBefore(newRow, table.lastElementChild); // Insert before the button row
                 break;
             }
-        };
+            else if(table.querySelector(".table-title").childNodes[0].textContent == data[num][2]){
+                console.log("This is the type" + data[num][3]);
+
+                check = true; 
+                let date = new Date(data[num][4]);
+                let formattedDate = date.toISOString().split('T')[0];
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td class="hidden-column">${data[num][6]}</td>
+                    <td><input type="text" value="${data[num][3]}" placeholder="Type" required class="type1" disabled></td>
+                    <td><input type="date" value=${formattedDate} placeholder="Date" class="date1" disabled></td>
+                    <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1" disabled></td>
+                    <td class="actions"> 
+                        <button class="sub2" style = "display:none;" onclick="submitRow(this)">Submit</button>
+                        <button class="edit"onclick="editRow(this)" style="display:inline;">Edit</button>
+                        <button class = "delete" style="display:inline;">Delete</button>
+                    </td>
+                `;
+            
+                table.insertBefore(newRow, table.lastElementChild); // Insert before the button row
+                
+                break;
+            }
+        }
         if(!check){
-            createTable(data[num][2])
+            createTable(data[num][2]);
+            tables = document.querySelectorAll(".table"); 
             let date = new Date(data[num][4]);
             let formattedDate = date.toISOString().split('T')[0];
             let tbody = document.querySelectorAll(".table");
+            console.log("This is the type" + data[num][3]);
+
             tbody = tbody[tbody.length-1];
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td class="hidden-column">${data[num][6]}</td>
-                <td><input type="text" value=${data[num][3]} placeholder="Type" required class="type1" disabled></td>
+                <td><input type="text" value="${data[num][3]}" placeholder="Type" required class="type1" disabled></td>
                 <td><input type="date" value=${formattedDate} placeholder="Date" class="date1" disabled></td>
                 <td><input type="number" value=${data[num][5]} placeholder="Amount" required class="amount1" disabled></td>
                 <td class="actions"> 
@@ -83,42 +137,150 @@ loadData()
             `;
             
             tbody.insertBefore(newRow, tbody.lastElementChild); // Insert before the button row
+            budgetText(tables[tables.length-1]);
+            if(data[num][8] == null){
+                tables[tables.length-1].querySelector(".budget-input").value = 0;
+            }else{
+                tables[tables.length-1].querySelector(".budget-input").value = data[num][8]
+            }
+            
+
+            
         }
+    } 
+
+    tables = document.querySelectorAll(".table"); 
+    let tableTitleElement = tables[0].querySelector(".table-title");
+    let totalIncomeText = document.createElement("span"); 
+    totalIncomeText.innerText += "Total Income: " + Number(getTotalSpent(tables[0])).toFixed(2); 
+    totalIncomeText.classList.add("totalIncome"); 
+    tables[0].appendChild(totalIncomeText); 
+
+
+    for(let i = 1; i<tables.length; i++){
+        let spent = Number(getTotalSpent(tables[i])).toFixed(2);
+        let budget = tables[i].querySelector(".budget-input").value; 
+        tables[i].querySelector(".budgetSpent").innerText = "Budget Spent: " + spent;
+        let left = Number(budget).toFixed(2) - spent;
+        tables[i].querySelector(".budgetLeft").innerText = "Budget Left: " + left.toFixed(2);
     }
+
+    getRemainingBudget();
+
     
     
+
+
+
 });
 
-
-
-function getTotalExpense(){
-    console.log("Function is starting");
-    let tables = document.querySelectorAll(".table")
-    console.log(tables);
-    let totalExpense = 0;
-    for(let table of tables){
-        console.log(table.querySelector(".amount1").textContent);
+//This function gets the overall remaining amount availabe to budget after taking 
+//in account all income and expense amount
+//No parameters or return value 
+function getRemainingBudget(){
+    let tables = document.querySelectorAll('.table'); //gets all tables
+    let income = getTotalSpent(tables[0]); //income will always be the first table
+    let budget = 0; 
+    for(let i = 1; i < tables.length; i++){
+        budget += Number(tables[i].querySelector(".budget-input").value); //Get's all budget for expense
     }
+    console.log("THis is remianing budget");
+    console.log(income);
+    console.log(budget);
+    let remainingBudget = Number(income).toFixed(2) - Number(budget).toFixed(2); //Remaining
+    document.querySelector(".totalBudgetAmount").textContent = "The remaining budget is: " + Number(remainingBudget).toFixed(2);
+
 }
-console.log("Get total expense function");
-getTotalExpense();
+
+function budgetText(table){
+    let tableTitleElement1 = table.querySelector(".table-title"); 
+    let budgetInput = document.createElement("span"); 
+    budgetInput.innerText += "Budget:";  
+    budgetInput.classList.add("budgetText"); 
+    tableTitleElement1.appendChild(budgetInput);   
+
+    let budgetInputBox = document.createElement("input");
+    budgetInputBox.placeholder = "Input budget";
+    budgetInputBox.type = "number";  
+    budgetInputBox.classList.add("budget-input");  
+    tableTitleElement1.appendChild(budgetInputBox);
+
+    let budgetSubmit = document.createElement("button");
+    budgetSubmit.type = "submit";
+    budgetSubmit.textContent = "Submit";
+    budgetSubmit.classList.add("budget-button");
+    budgetSubmit.onclick = function(){
+        let budgetValue = budgetSubmit.closest('tr').querySelector('.budget-input').value;
+        let tableName = budgetSubmit.closest('table').querySelector('.table-title').childNodes[0].textContent;
+        if(budgetValue == ""){
+            budgetValue = 0;
+        }
+        const postData = {
+            budget: budgetValue,
+            table: tableName,
+        };
+        fetch('http://127.0.0.1:5000/budget', { //sending data with POST method to backend server
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData) //stringify data for correct formating
+        });
+        console.log(postData);
+        let spent = getTotalSpent(table);
+        table.querySelector(".budgetSpent").innerText = "Budget Spent: " + Number(spent).toFixed(2);
+        table.querySelector(".budgetLeft").innerText = "Budget Left: " + (Number(budgetValue) - spent).toFixed(2);
+        getRemainingBudget();
+
+        
+    }
+    tableTitleElement1.appendChild(budgetSubmit);
+
+   let budgetSpent = document.createElement("span");  
+    budgetSpent.innerText += "Budget Spent:";  
+    budgetSpent.classList.add("budgetSpent"); 
+    tableTitleElement1.appendChild(budgetSpent);   
+
+    let budgetLeft = document.createElement("span"); 
+    budgetLeft.innerText += "Budget Left:";  
+    budgetLeft.classList.add("budgetLeft"); 
+    tableTitleElement1.appendChild(budgetLeft);  
+
+}
+
+//Gets the amount spent from an expense table
+//Takes in a table for parameter
+//returns the amount spent 
+
+function getTotalSpent(table){
+    let spent = 0; 
+    rows = table.querySelectorAll(".amount1"); //Selects values under amount column
+    for(let i = 0; i<rows.length; i++){
+        console.log(rows[i].value);
+        if(rows[i].value == "" || rows[i].closest('tr').style.display === 'none'){
+            continue;
+        }else{
+            spent += Number(rows[i].value); //Adds all valid amount together to get total spent
+        }
+    }
+    return Number(spent).toFixed(2); // returns spent
+    
+    
+}
+
 
 function sub1function(element){
-    console.log("sub1 is clicked");
-    console.log("this works");
-    console.log(element);
-    console.log(element.target);
+
     let type = element.target.closest('tr').querySelector(".type1").value;
     //get the data within the rows 
     let date = element.target.closest('tr').querySelector(".date1").value;
     let amount = element.target.closest('tr').querySelector(".amount1").value;
     let index = element.target.closest('tr').querySelector(".hidden-column").textContent;
-    let tableName = element.target.closest('table').querySelector("thead tr th.table-title").textContent;
+    let tableName = element.target.closest('table').querySelector(".table-title").childNodes[0].textContent;
 
-    console.log(tableName);
     //data the format would be sent in 
     const postData = {
-        username: "Kaelyn2",
+        username: username,
         password: "Huge",
         table: tableName,
         typeOf: type,
@@ -135,20 +297,36 @@ function sub1function(element){
         body: JSON.stringify(postData) //stringify data for correct formating
     });
     console.log(postData);
+
+    let spent = getTotalSpent(element.target.closest('table'));
+    console.log("Spent" + spent);
+    if(tableName == "Income"){
+        console.log("true");
+        element.target.closest('table').querySelector(".totalIncome").innerText = "Total Income: " + Number(spent).toFixed(2);
+
+        
+    }else{
+        
+        let budgetValue = element.target.closest('table').querySelector(".budget-input").value;
+        element.target.closest('table').querySelector(".budgetSpent").innerText = "Budget Spent: " + Number(spent).toFixed(2);
+        element.target.closest('table').querySelector(".budgetLeft").innerText = "Budget Left: " + (Number(budgetValue) - spent).toFixed(2);
+        console.log("budget value" + budgetValue);
+        console.log("What is left" + (Number(budgetValue) - spent).toFixed(2));
+    }
+    getRemainingBudget();
+
 }
 function sub2function(element){
-    console.log("sub2 is clicked");
     let type = element.target.closest('tr').querySelector(".type1").value;
     //get the data within the rows 
     let date = element.target.closest('tr').querySelector(".date1").value;
     let amount = element.target.closest('tr').querySelector(".amount1").value;
     let index = element.target.closest('tr').querySelector(".hidden-column").textContent;
-    let tableName = element.target.closest('table').querySelector("thead tr th.table-title").textContent;
+    let tableName = element.target.closest('table').querySelector(".table-title").childNodes[0].textContent;
 
-    console.log(tableName);
     //data the format would be sent in 
     const postData = {
-        username: "Kaelyn2",
+        username: username,
         password: "Huge",
         table: tableName,
         typeOf: type,
@@ -166,16 +344,27 @@ function sub2function(element){
         },
         body: JSON.stringify(postData) //stringify data for correct formating
     });
-    console.log("This is the post data");
+    
     console.log(postData);
+    let spent = getTotalSpent(element.target.closest('table'));
+    if(tableName == "Income"){
+        element.target.closest('table').querySelector(".totalIncome").innerText = "Total Income: " + Number(spent).toFixed(2);
+        
+    }else{
+        
+        let budgetValue = element.target.closest('table').querySelector(".budget-input").value;
+        element.target.closest('table').querySelector(".budgetSpent").innerText = "Budget Spent: " + Number(spent).toFixed(2);
+        element.target.closest('table').querySelector(".budgetLeft").innerText = "Budget Left: " + (Number(budgetValue) - spent).toFixed(2);
+    }
+    getRemainingBudget();
+
 }
 
 function deleteRow(element){
     let index = element.target.closest('tr').querySelector(".hidden-column").textContent;
-    console.log(element);
-    console.log(element.target);
+    
     const postData = {
-        username: "Kaelyn2",
+        username: username,
         indexOf: index,
     };
     fetch('http://127.0.0.1:5000/delete', { //sending data with POST method to backend server
@@ -185,10 +374,29 @@ function deleteRow(element){
         },
         body: JSON.stringify(postData) //stringify data for correct formating
     });
-    console.log("This is the post data");
-    console.log(postData);
-    console.log("Row that should delete");
+  
     element.target.closest('tr').style.display = "none";
+    console.log("This is the delete");
+    let tableName = element.target.closest('table').querySelector(".table-title").childNodes[0].textContent;
+
+    if(tableName == "Income"){
+        let spent = getTotalSpent(element.target.closest('table'));
+
+        element.target.closest('table').querySelector(".totalIncome").innerText = "Total Income: " + Number(spent).toFixed(2);
+
+        
+    }else{
+        let spent = getTotalSpent(element.target.closest('table'));
+
+        let budgetValue = element.target.closest('table').querySelector(".budget-input").value;
+        element.target.closest('table').querySelector(".budgetSpent").innerText = "Budget Spent: " + Number(spent).toFixed(2);
+        element.target.closest('table').querySelector(".budgetLeft").innerText = "Budget Left: " + (Number(budgetValue) - spent).toFixed(2);
+    }
+    getRemainingBudget();
+
+
+    
+    
 
 }
 const mutationObserver = new MutationObserver(function(mutations){ 
@@ -208,7 +416,6 @@ const mutationObserver = new MutationObserver(function(mutations){
     });
 
     document.querySelectorAll('.delete').forEach(function(element){
-        console.log('Right delete function');
         element.removeEventListener('click', deleteRow);
         element.addEventListener('click', deleteRow);
 
@@ -240,7 +447,7 @@ totalIncome = 0;
 totalExpense = 0;
 
 function addRowFunction(button) {
-    sameIndex += 1;
+    sameIndex += 1; 
 
     const tbody = button.closest('tbody');
     const rowCount = tbody.rows.length - 1; // Exclude the "Add Row" button row
@@ -295,7 +502,7 @@ function createTable(tableName) {
         <td class="hidden-column">${sameIndex}</td>
         <td><input type="text" value="" placeholder="Type" class="type1" ></td>
         <td><input type="date" value="" placeholder="Date" class="date1"></td>
-        <td><input type="number" value="" onchange="calculateTotal(this, '${tableName}')" placeholder="Amount" class="amount1"></td>
+        <td><input type="number" value="" placeholder="Amount" class="amount1"></td>
         <td class="actions"> 
             <button class="sub1" onclick="submitRow(this)">Submit</button>
             <button class ="edit" onclick="editRow(this)" style="display:none;">Edit</button>
@@ -317,33 +524,22 @@ function createTable(tableName) {
     document.getElementById('tableContainer').appendChild(table);
 }
 
+function createTable2(tableName){
+    createTable(tableName);
+    
+    let tables = document.querySelectorAll('.table');
+    let table = tables[tables.length-1];
+    budgetText(table);
 
-
-function calculateTotal(input, tableName) {
-    const tbody = input.closest('tbody');
-    const rows = tbody.querySelectorAll('tr');
-    let cumulativeTotal = 0;
-
- 
-
-    // Update the global totals based on the table
-    if (tableName === 'Income') {
-        totalIncome = cumulativeTotal;
-    } else if (tableName === 'Expense') {
-        totalExpense = cumulativeTotal;
-    }
-
-    // Update the balance whenever totals change
-    updateBalance();
 }
+
+
+
+
 
 // Function to update the balance on the page 
 // Gets updated balance and displays it whenever you click on the page
-function updateBalance() {
-    const balance = totalIncome - totalExpense;
-    const balanceElement = document.getElementById('balance');
-    balanceElement.textContent = `Balance: $${balance.toFixed(2)}`;
-}
+
 
 // Submit row (showing edit and delete buttons, disabling inputs)
 function submitRow(button) {
@@ -352,8 +548,6 @@ function submitRow(button) {
     // Disable all input fields in the row
     const inputs = row.querySelectorAll('input');
     inputs.forEach(input => input.disabled = true);
-    console.log('delete row');
-    console.log(row.querySelector('.delete'));
     // Hide Submit, Show Edit and Delete
     row.querySelector('.sub2').style.display = 'none'; // Hide Submit
     row.querySelector('.edit').style.display = 'inline';  // Show Edit

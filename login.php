@@ -29,68 +29,60 @@ session_start();
         <button class="form__button" name="login-button" type="submit">Continue</button>
         </p> 
         <p class="form__text"> 
-            <a class="form__link" href="signup.php" id="linkCreateAccount">Don't have an account? Create account</a>
+            <a class="form__link" href="index.php" id="linkCreateAccount">Don't have an account? Create account</a>
         </p>
     </form>   
     </div>  
 
     <?php
-    $login_user = '';
-    $login_password = '';
-
+    $login_user = ' ';
+    $login_password = ' ';
+    $login_email = ' ';
+    $valid = false; 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $_SESSION['login_user'] = $_POST['email'];
-        $login_user = $_SESSION['login_user'];
-        $_SESSION['login_password'] = $_POST['password'];
-        $login_password = $_SESSION['login_password'];
+        $login_user = $_POST['email'];
+        $login_password = $_POST['password'];
         
-        $servername = "127.0.0.1";
-        $username = "root";
-        $password = "PrincessBella45!";
-        $database = "test_schema";
-        $connection = new mysqli($servername, $username, $password, $database);
 
-        if($connection->connect_error){
-            die("connection failed: " . $connection->connect_error);
-        }
+        $host = "127.0.0.1";
+        $user = "root";
+        $password = "K@C12345";
+        $database = "testDB";
 
-        $sql = "SELECT * FROM email_verify";
-        $result = $connection->query($sql);
+        $connection = mysqli_connect($host, $user, $password, $database);
 
-        if(!$result){
-            die("Invalid query: " . $connection->error);
-        }
-
-        $found = false;
-
-        while ($row = $result->fetch_assoc()) {
-            if (($row["Username"] == $login_user || $row["verified_email"] == $login_user) && $row["password"] == $login_password) {
-                echo $login_user;
-                echo $login_password;
-                $found = true;
-                $_SESSION['username'] = $row["Username"];
-                $_SESSION['email'] = $row['verified_email'];
-                header('location:/index.php');
-                exit;
+        $qry = mysqli_query($connection, "SELECT * FROM users");
+        while($result = mysqli_fetch_array($qry))
+        {
+            if(($login_user == $result["Username"] && $login_password == $result["Password"]) || ($login_user == $result['Email'] && $login_password == $result["Password"])){
+                $valid = true; 
+                $login_email = $result['Email'];
             }
         }
 
-        if(!$found){
-            echo "<script>
-                var message = document.getElementById('error-message');
-                message.style.display = 'block';
-              </script>";
+        if($valid){
+            $_SESSION['username'] = $login_user; 
+            $_SESSION['password'] = $login_password;
+            $_SESSION['email'] = $login_email;
+
+            
+            header('location:/home.php');
+            exit;
         }
+        
 
-        $connection->close();
-        session_destroy();
-    }
 
-    if (isset($_SESSION['login_user'])) {
-        $login_user = $_SESSION['login_user'];
-    }
-    if (isset($_SESSION['login_password'])) {
-        $login_password = $_SESSION['login_password'];
+    
+    ?>
+    <script>
+        var message = document.getElementById("error-message");
+        message.style.display = <?php echo $valid? "'none'" : "'block'"; ?>;
+
+    </script>
+    <?php
+        if (isset($connection)) {
+                mysqli_close($connection);
+        }
     }
     ?>
 </body> 
